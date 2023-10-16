@@ -12,6 +12,8 @@ struct ContentView: View {
     @State private var inputUnit = "Feet"
     @State private var outputUnit = "Feet"
     
+    @FocusState private var inputValueIsFocused: Bool
+    
     private let units = [
         "Feet": UnitLength.feet,
         "Inches": UnitLength.inches,
@@ -34,6 +36,9 @@ struct ContentView: View {
             Form {
                 Section("Input") {
                     TextField("Value", value: $inputValue, format: .number)
+                        .keyboardType(.decimalPad)
+                        .focused($inputValueIsFocused)
+                    
                     Picker("Unit", selection: $inputUnit) {
                         ForEach(Array(units.keys), id: \.self) {
                             Text("\($0)")
@@ -54,6 +59,13 @@ struct ContentView: View {
                 }
             }
             .navigationTitle("Unit Converter")
+            .toolbar {
+                if inputValueIsFocused {
+                    Button("Done") {
+                        inputValueIsFocused = false
+                    }
+                }
+            }
         }
     }
 }

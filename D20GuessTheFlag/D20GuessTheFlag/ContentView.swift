@@ -15,6 +15,17 @@ struct ContentView: View {
     @State var correctAnswer = Int.random(in: 0...2)
     
     @State private var userScore: Int = 0
+    @State private var answeredQuestion: Int = 0
+    
+    private let maximumNumberOfQuestions: Int = 8
+    
+    private var alertConfirmationButtonTitle: String {
+        isTimeToRestartGame ? "Restart" : "Continue"
+    }
+    
+    private var isTimeToRestartGame: Bool {
+        answeredQuestion >= maximumNumberOfQuestions
+    }
     
     var body: some View {
         ZStack {
@@ -52,7 +63,7 @@ struct ContentView: View {
                 }
                 .padding()
                 .alert(scoreTitle, isPresented: $showingScore) {
-                    Button("Continue", action: askQuestion)
+                    Button(alertConfirmationButtonTitle, action: tapOnAlertConfirmationButton)
                 } message: {
                     Text("Your score is \(userScore)")
                 }
@@ -60,6 +71,9 @@ struct ContentView: View {
                 .padding(.vertical, 20)
                 .background(.regularMaterial)
                 .clipShape(.rect(cornerRadius: 20))
+                
+                Text("Number of Answered Questions: \(answeredQuestion) / \(maximumNumberOfQuestions)")
+                    .foregroundStyle(.white)
                 
                 Spacer()
                 Spacer()
@@ -84,6 +98,20 @@ struct ContentView: View {
         }
 
         showingScore = true
+        
+        answeredQuestion += 1
+    }
+    
+    func tapOnAlertConfirmationButton() {
+        if isTimeToRestartGame {
+            restartGame()
+        } else {
+            askQuestion()
+        }
+    }
+    
+    func restartGame() {
+        answeredQuestion = 0
     }
     
     func askQuestion() {

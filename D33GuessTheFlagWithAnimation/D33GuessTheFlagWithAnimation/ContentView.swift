@@ -61,6 +61,7 @@ struct ContentView: View {
                                 .clipShape(.capsule)
                                 .shadow(radius: 5)
                         }
+                        .opacity(tappedFlagIndex == number || tappedFlagIndex == -1 ? 1 : 0.25)
                         .rotation3DEffect(
                             .degrees(tappedFlagIndex == number ? 360: 0),
                                                   axis: (x: 0.0, y: 1.0, z: 0.0)

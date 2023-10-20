@@ -17,6 +17,8 @@ struct ContentView: View {
     @State private var userScore: Int = 0
     @State private var answeredQuestion: Int = 0
     
+    @State private var tappedFlagIndex: Int = -1
+    
     private let maximumNumberOfQuestions: Int = 8
     
     private var alertConfirmationButtonTitle: String {
@@ -59,6 +61,11 @@ struct ContentView: View {
                                 .clipShape(.capsule)
                                 .shadow(radius: 5)
                         }
+                        .rotation3DEffect(
+                            .degrees(tappedFlagIndex == number ? 360: 0),
+                                                  axis: (x: 0.0, y: 1.0, z: 0.0)
+                        )
+                        .animation(tappedFlagIndex != -1 ? .default : nil, value: tappedFlagIndex)
                     }
                 }
                 .padding()
@@ -89,6 +96,8 @@ struct ContentView: View {
     }
     
     func flagTapped(_ number: Int) {
+        tappedFlagIndex = number
+        
         if number == correctAnswer {
             scoreTitle = "Correct"
             userScore += 1
@@ -103,6 +112,8 @@ struct ContentView: View {
     }
     
     func tapOnAlertConfirmationButton() {
+        tappedFlagIndex = -1
+        
         if isTimeToRestartGame {
             restartGame()
         } else {
